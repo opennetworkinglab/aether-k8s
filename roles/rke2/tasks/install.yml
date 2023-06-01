@@ -20,25 +20,24 @@
     dest: "{{ script_dir }}/install.sh"
     mode: "a+x"
 
-- name: install rke2 masters
-  command: "{{ script_dir }}/install.sh"
+- name: create /etc/rancher/rke2
+  file:
+    path: "/etc/rancher/rke2"
+    state: directory
+  become: true
+
+- name: install rke2 on masters
+  shell: "{{ script_dir }}/install.sh"
   environment:
     INSTALL_RKE2_VERSION: "{{ rke2.version }}"
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-- name: install rke2 workers
-  command: "{{ script_dir }}/install.sh"
-  environment:
-    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
-    INSTALL_RKE2_TYPE: "agent"
-  when: inventory_hostname in groups['worker_nodes']
-  become: true
-
-- name: create /etc/rancher/rke2
-  file:
-    path: "/etc/rancher/rke2"
-    state: directory
+- name: enable rke2-server on masters
+  systemd:
+    name: rke2-server
+    enabled: true
+  when: inventory_hostname in groups['master_nodes']
   become: true
 
 # TODO: fix multi-master issue (tls-san)
@@ -50,21 +49,7 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-- name: copy worker-config.yaml to /etc/rancher/rke2/config.yaml
-  template:
-    src: roles/rke2/templates/worker-config.yaml
-    dest: /etc/rancher/rke2/config.yaml
-  when: inventory_hostname in groups['worker_nodes']
-  become: true
-
-- name: enable rke2-server masters
-  systemd:
-    name: rke2-server
-    enabled: true
-  when: inventory_hostname in groups['master_nodes']
-  become: true
-
-- name: start rke2-server masters
+- name: start rke2-server on masters
   systemd:
     name: rke2-server
     state: started
@@ -81,16 +66,31 @@
 # - pause:
 #     seconds: 30
 
-- name: enable rke2-server workers
+- name: install rke2 agent on workers
+  shell: "{{ script_dir }}/install.sh"
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+    INSTALL_RKE2_TYPE: "agent"
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+- name: enable rke2-agent on workers
   systemd:
-    name: rke2-server
+    name: rke2-agent
     enabled: true
   when: inventory_hostname in groups['worker_nodes']
   become: true
 
-- name: start rke2-server workers (sequentially)
+- name: copy worker-config.yaml to /etc/rancher/rke2/config.yaml
+  template:
+    src: roles/rke2/templates/worker-config.yaml
+    dest: /etc/rancher/rke2/config.yaml
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+- name: start rke2-agent on workers (sequentially)
   systemd:
-    name: rke2-server
+    name: rke2-agent
     state: started
   throttle: 1
   when: inventory_hostname in groups['worker_nodes']
