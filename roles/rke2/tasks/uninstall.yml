@@ -29,7 +29,7 @@
   become: true
   ignore_errors: yes
 
-- name: remove /tmp/rke2
+- name: remove {{ script_dir }}
   file:
     path: "{{ script_dir }}"
     state: absent

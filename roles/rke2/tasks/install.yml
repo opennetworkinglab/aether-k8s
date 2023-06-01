@@ -3,12 +3,12 @@
 - set_fact:
     script_dir: /tmp/rke2
 
-- name: remove /tmp/rke2
+- name: remove {{ script_dir }}
   file:
     path: "{{ script_dir }}"
     state: absent
 
-- name: create /tmp/rke2
+- name: create {{ script_dir }}
   file:
     path: "{{ script_dir }}"
     state: directory
