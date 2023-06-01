@@ -1,5 +1,18 @@
 ---
 
+- name: delete {{ ansible_env.HOME }}/.kube
+  file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: absent
+  when: inventory_hostname in groups['master_nodes']
+
+- name: delete /usr/local/bin/kubectl
+  file:
+    path: "/usr/local/bin/kubectl"
+    state: absent
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
 - set_fact:
     script_dir: /tmp/rke2
 

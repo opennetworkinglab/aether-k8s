@@ -95,3 +95,32 @@
   throttle: 1
   when: inventory_hostname in groups['worker_nodes']
   become: true
+
+- name: download kubectl
+  get_url:
+    url: https://dl.k8s.io/release/{{ kubectl.version }}/bin/linux/amd64/kubectl
+    validate_certs: false
+    dest: "/usr/local/bin/kubectl"
+    mode: "a+x"
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: create {{ ansible_env.HOME }}/.kube
+  file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+  when: inventory_hostname in groups['master_nodes']
+
+- name: copy /etc/rancher/rke2/rke2.yaml {{ ansible_env.HOME }}/.kube/config
+  copy:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    remote_src: yes
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: change {{ ansible_env.HOME }}/.kube ownership
+  shell: |
+    chown -R $(shell id -u):$(shell id -g) {{ ansible_env.HOME }}/.kube
+  when: inventory_hostname in groups['master_nodes']
+  become: true

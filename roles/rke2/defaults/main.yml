@@ -7,3 +7,5 @@ rke2:
 
   version: v1.23.4+rke2r1
 
+kubectl:
+  version: v1.23.15
