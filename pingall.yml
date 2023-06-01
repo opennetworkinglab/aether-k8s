@@ -7,3 +7,7 @@
   tasks:
   - name: ping all
     ping:
+
+  - name: check master node IP
+    debug: var=hostvars['node1']['ansible_default_ipv4']['address']
+    when: inventory_hostname == 'node2'

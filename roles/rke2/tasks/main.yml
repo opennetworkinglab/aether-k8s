@@ -1,0 +1,9 @@
+---
+
+- name: install k8s/rke2
+  include: roles/rke2/tasks/install.yml
+  tags: install
+
+- name: uninstall k8s/rke2
+  include: roles/rke2/tasks/uninstall.yml
+  tags: uninstall

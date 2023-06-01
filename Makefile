@@ -16,3 +16,9 @@ list-keys:
 
 pingall:
 	ansible-playbook -i hosts.ini pingall.yml
+
+### c. Provision rke2
+rke2-install:
+	ansible-playbook -i hosts.ini rke2.yml --tags install 
+rke2-uninstall:
+	ansible-playbook -i hosts.ini rke2.yml --tags uninstall 

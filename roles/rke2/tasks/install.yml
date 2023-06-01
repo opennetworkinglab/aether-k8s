@@ -1,0 +1,69 @@
+---
+
+- set_fact:
+    script_dir: /tmp/rke2
+
+- name: remove /tmp/rke2
+  file:
+    path: "{{ script_dir }}"
+    state: absent
+
+- name: create /tmp/rke2
+  file:
+    path: "{{ script_dir }}"
+    state: directory
+
+- name: download rke2
+  get_url:
+    url: https://get.rke2.io
+    validate_certs: false
+    dest: "{{ script_dir }}/install.sh"
+    mode: "a+x"
+
+- name: install rke2 masters
+  command: "{{ script_dir }}/install.sh"
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: install rke2 workers
+  command: "{{ script_dir }}/install.sh"
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+    INSTALL_RKE2_TYPE: "agent"
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+- name: create /etc/rancher/rke2
+  file:
+    path: "/etc/rancher/rke2"
+    state: directory
+  become: true
+
+# TODO: fix multi-master issue (tls-san)
+- name: copy master-config.yaml to /etc/rancher/rke2/config.yaml
+  template:
+    src: roles/rke2/templates/master-config.yaml
+    dest: /etc/rancher/rke2/config.yaml
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: copy worker-config.yaml to /etc/rancher/rke2/config.yaml
+  template:
+    src: roles/rke2/templates/worker-config.yaml
+    dest: /etc/rancher/rke2/config.yaml
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+# - name: enable rke2-server
+#   systemd:
+#     name: rke2-server
+#     enabled: true
+#   become: true
+
+# - name: start rke2-server
+#   systemd:
+#     name: rke2-server
+#     state: started
+#   become: true

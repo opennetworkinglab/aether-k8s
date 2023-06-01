@@ -1,0 +1,22 @@
+---
+
+- set_fact:
+    script_dir: /tmp/rke2
+
+# - name: delete /etc/rancher/rke2/config.yaml
+#   file:
+#     path: /etc/rancher/rke2/config.yaml
+#     state: absent
+#   become: true
+
+- name: uninstall rke2 masters/workers
+  command: "/usr/local/bin/rke2-uninstall.sh"
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+  become: true
+  ignore_errors: yes
+
+- name: remove /tmp/rke2
+  file:
+    path: "{{ script_dir }}"
+    state: absent
