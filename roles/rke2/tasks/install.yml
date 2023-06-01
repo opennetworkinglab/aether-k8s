@@ -78,6 +78,9 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
+# - pause:
+#     seconds: 30
+
 - name: enable rke2-server workers
   systemd:
     name: rke2-server
@@ -85,9 +88,10 @@
   when: inventory_hostname in groups['worker_nodes']
   become: true
 
-- name: start rke2-server workers
+- name: start rke2-server workers (sequentially)
   systemd:
     name: rke2-server
     state: started
+  throttle: 1
   when: inventory_hostname in groups['worker_nodes']
   become: true

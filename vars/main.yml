@@ -1,0 +1,8 @@
+rke2:
+  config:
+    token: purdue-k8s-rke2
+
+    server: node1
+    port: 9345
+
+  version: v1.23.4+rke2r1
