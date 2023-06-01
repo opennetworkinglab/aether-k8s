@@ -42,6 +42,7 @@
   become: true
 
 # TODO: fix multi-master issue (tls-san)
+# TODO: remove aether-specific rke2 configs (e.g., cluster-cidr ...)
 - name: copy master-config.yaml to /etc/rancher/rke2/config.yaml
   template:
     src: roles/rke2/templates/master-config.yaml
@@ -56,14 +57,37 @@
   when: inventory_hostname in groups['worker_nodes']
   become: true
 
-# - name: enable rke2-server
-#   systemd:
-#     name: rke2-server
-#     enabled: true
-#   become: true
+- name: enable rke2-server masters
+  systemd:
+    name: rke2-server
+    enabled: true
+  when: inventory_hostname in groups['master_nodes']
+  become: true
 
-# - name: start rke2-server
-#   systemd:
-#     name: rke2-server
-#     state: started
-#   become: true
+- name: start rke2-server masters
+  systemd:
+    name: rke2-server
+    state: started
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: waiting for the master nodes to get ready 
+  shell: |
+    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait nodes --for=condition=Ready --all --timeout=300s
+    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait deployment -n kube-system --for=condition=available --all --timeout=300s
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: enable rke2-server workers
+  systemd:
+    name: rke2-server
+    enabled: true
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+- name: start rke2-server workers
+  systemd:
+    name: rke2-server
+    state: started
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
