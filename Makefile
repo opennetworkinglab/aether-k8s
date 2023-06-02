@@ -1,6 +1,6 @@
 #### Variables ####
 
-export K8S_ROOT_DIR ?= .
+export K8S_ROOT_DIR ?= $(PWD)
 
 export ANSIBLE_NAME ?= ansible-k8s
 export HOSTS_INI ?= hosts.ini
