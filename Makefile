@@ -1,3 +1,7 @@
+#### Variables ####
+
+export HOSTS_INI ?= hosts.ini
+
 #### Start Ansible docker ####
 
 ansible:
@@ -15,7 +19,7 @@ list-keys:
 ### b. Deugging
 
 pingall:
-	ansible-playbook -i hosts.ini pingall.yml
+	ansible-playbook -i $(HOSTS_INI) pingall.yml
 
 ### c. Provision k8s
 k8s-install: rke2-install helm-install
@@ -23,12 +27,12 @@ k8s-uninstall: helm-uninstall rke2-uninstall
 
 ### d. Provision rke2
 rke2-install:
-	ansible-playbook -i hosts.ini rke2.yml --tags install 
+	ansible-playbook -i $(HOSTS_INI) rke2.yml --tags install 
 rke2-uninstall:
-	ansible-playbook -i hosts.ini rke2.yml --tags uninstall 
+	ansible-playbook -i $(HOSTS_INI) rke2.yml --tags uninstall 
 
 ### e. Provision helm
 helm-install:
-	ansible-playbook -i hosts.ini helm.yml --tags install 
+	ansible-playbook -i $(HOSTS_INI) helm.yml --tags install 
 helm-uninstall:
-	ansible-playbook -i hosts.ini helm.yml --tags uninstall
+	ansible-playbook -i $(HOSTS_INI) helm.yml --tags uninstall
