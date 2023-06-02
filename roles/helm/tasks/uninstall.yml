@@ -5,6 +5,7 @@
     name: incubator
     state: absent
   when: inventory_hostname in groups['master_nodes']
+  ignore_errors: yes
 
 - set_fact:
     script_dir: /tmp/helm
