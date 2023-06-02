@@ -29,8 +29,8 @@ k8s-debug:
 		--extra-vars "ROOT_DIR=$(ROOT_DIR)" --extra-vars $(EXTRA_VARS)
 
 #### c. Provision k8s ####
-k8s-install: rke2-install helm-install
-k8s-uninstall: helm-uninstall rke2-uninstall
+k8s-install: k8s-rke2-install k8s-helm-install
+k8s-uninstall: k8s-helm-uninstall k8s-rke2-uninstall
 
 #### d. Provision rke2 ####
 k8s-rke2-install:
