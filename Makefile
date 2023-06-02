@@ -1,7 +1,7 @@
 #### Variables ####
 
-export HOSTS_INI ?= hosts.ini
 export ANSIBLE_NAME ?= ansible-k8s
+export HOSTS_INI ?= hosts.ini
 
 #### Start Ansible docker ####
 
