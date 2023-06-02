@@ -1,2 +1,2 @@
-token: {{ rke2.config.token }}
+token: {{ k8s.rke2.config.token }}
 node-name: {{ inventory_hostname }}

@@ -26,7 +26,7 @@
 - name: install helm on masters
   shell: "{{ script_dir }}/get-helm.sh"
   environment:
-    DESIRED_VERSION: "{{ helm.version }}"
+    DESIRED_VERSION: "{{ k8s.helm.version }}"
   when: inventory_hostname in groups['master_nodes']
   become: true
 

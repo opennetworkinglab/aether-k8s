@@ -1,11 +1,12 @@
-rke2:
-  version: v1.23.4+rke2r1
-  config:
-    token: purdue-k8s-rke2
-    server: node1
-    port: 9345
-    params_file: 
-      path: ""
+k8s:
+  rke2:
+    version: v1.23.4+rke2r1
+    config:
+      token: purdue-k8s-rke2
+      server: node1
+      port: 9345
+      params_file: 
+        path: ""
 
-kubectl:
-  version: v1.23.15
+  kubectl:
+    version: v1.23.15

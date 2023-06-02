@@ -29,7 +29,7 @@
 - name: install rke2 on masters
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
   when: inventory_hostname in groups['master_nodes']
   become: true
 
@@ -56,9 +56,9 @@
   delegate_to: localhost
 
 # TODO: add check for ke2.config.params_file.path existence
-- name: copy {{ ROOT_DIR }}/{{ rke2.config.params_file.path }} to (localhost)/tmp/master-params.yaml
+- name: copy {{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.path }} to (localhost)/tmp/master-params.yaml
   template: 
-    src: "{{ ROOT_DIR }}/{{ rke2.config.params_file.path }}" 
+    src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.path }}" 
     dest: /tmp/master-params.yaml
   when: inventory_hostname in groups['master_nodes']
   delegate_to: localhost
@@ -94,7 +94,7 @@
 - name: install rke2 agent on workers
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ rke2.version }}"
+    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
     INSTALL_RKE2_TYPE: "agent"
   when: inventory_hostname in groups['worker_nodes']
   become: true
@@ -121,9 +121,9 @@
   delegate_to: localhost
 
 # TODO: add check for ke2.config.params_file.path existence
-- name: copy {{ ROOT_DIR }}/{{ rke2.config.params_file.path }} to (localhost)/tmp/worker-params.yaml
+- name: copy {{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.path }} to (localhost)/tmp/worker-params.yaml
   template: 
-    src: "{{ ROOT_DIR }}/{{ rke2.config.params_file.path }}" 
+    src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.path }}" 
     dest: /tmp/worker-params.yaml
   when: inventory_hostname in groups['worker_nodes']
   delegate_to: localhost
@@ -149,7 +149,7 @@
 
 - name: download kubectl
   get_url:
-    url: https://dl.k8s.io/release/{{ kubectl.version }}/bin/linux/amd64/kubectl
+    url: https://dl.k8s.io/release/{{ k8s.kubectl.version }}/bin/linux/amd64/kubectl
     validate_certs: false
     dest: "/usr/local/bin/kubectl"
     mode: "a+x"

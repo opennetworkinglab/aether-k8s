@@ -1,3 +1,4 @@
 
-helm:
-  version: v3.10.3
+k8s:
+  helm:
+    version: v3.10.3
