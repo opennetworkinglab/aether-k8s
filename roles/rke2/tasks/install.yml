@@ -56,9 +56,9 @@
   delegate_to: localhost
 
 # TODO: add check for ke2.config.params_file.path existence
-- name: copy {{ rke2.config.params_file.path }} to (localhost)/tmp/master-params.yaml
+- name: copy {{ ROOT_DIR }}/{{ rke2.config.params_file.path }} to (localhost)/tmp/master-params.yaml
   template: 
-    src: "{{ rke2.config.params_file.path }}" 
+    src: "{{ ROOT_DIR }}/{{ rke2.config.params_file.path }}" 
     dest: /tmp/master-params.yaml
   when: inventory_hostname in groups['master_nodes']
   delegate_to: localhost
@@ -121,9 +121,9 @@
   delegate_to: localhost
 
 # TODO: add check for ke2.config.params_file.path existence
-- name: copy {{ rke2.config.params_file.path }} to (localhost)/tmp/worker-params.yaml
+- name: copy {{ ROOT_DIR }}/{{ rke2.config.params_file.path }} to (localhost)/tmp/worker-params.yaml
   template: 
-    src: "{{ rke2.config.params_file.path }}" 
+    src: "{{ ROOT_DIR }}/{{ rke2.config.params_file.path }}" 
     dest: /tmp/worker-params.yaml
   when: inventory_hostname in groups['worker_nodes']
   delegate_to: localhost
