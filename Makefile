@@ -1,7 +1,7 @@
 #### Start Ansible docker ####
 
 ansible:
-	export ANSIBLE_NAME=ansible-5gc; \
+	export ANSIBLE_NAME=ansible-k8s; \
 	sh ./scripts/ansible ssh-agent bash
 
 ### a. Private keys (for ssh and git)
