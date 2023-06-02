@@ -1,11 +1,12 @@
 #### Variables ####
 
 export HOSTS_INI ?= hosts.ini
+export ANSIBLE_NAME ?= ansible-k8s
 
 #### Start Ansible docker ####
 
 ansible:
-	export ANSIBLE_NAME=ansible-k8s; \
+	export ANSIBLE_NAME=$(ANSIBLE_NAME); \
 	sh ./scripts/ansible ssh-agent bash
 
 ### a. Private keys (for ssh and git)
