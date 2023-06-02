@@ -1,6 +1,6 @@
 ---
 
-- name: ping all hosts
+- name: debug hosts
   hosts: all
   gather_facts: true
 
