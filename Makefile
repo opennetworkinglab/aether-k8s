@@ -6,7 +6,7 @@ export K8S_ROOT_DIR ?= $(ROOT_DIR)
 export ANSIBLE_NAME ?= ansible-k8s
 export HOSTS_INI_FILE ?= $(K8S_ROOT_DIR)/hosts.ini
 
-export EXTRA_VARS ?= 
+export EXTRA_VARS ?= ""
 
 #### Start Ansible docker ####
 
