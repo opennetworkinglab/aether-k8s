@@ -6,7 +6,8 @@ k8s:
       server: node1
       port: 9345
       params_file: 
-        path: ""
+        master: ""
+        worker: ""
 
   kubectl:
     version: v1.23.15
