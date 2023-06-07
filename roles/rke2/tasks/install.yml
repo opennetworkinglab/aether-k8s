@@ -88,6 +88,12 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
+- name: force systemd to reread configs
+  systemd:
+    daemon_reload: true
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
 # - pause:
 #     seconds: 30
 
@@ -144,6 +150,12 @@
     name: rke2-agent
     state: started
   throttle: 1
+  when: inventory_hostname in groups['worker_nodes']
+  become: true
+
+- name: force systemd to reread configs
+  systemd:
+    daemon_reload: true
   when: inventory_hostname in groups['worker_nodes']
   become: true
 
