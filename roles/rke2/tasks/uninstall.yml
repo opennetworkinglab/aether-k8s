@@ -34,6 +34,21 @@
     path: "{{ script_dir }}"
     state: absent
 
+- name: flush iptables rules
+  iptables:
+    chain: "{{ item }}"
+    flush: yes
+  with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
+  become: true
+
+- name: flush iptables nat rules
+  ansible.builtin.iptables:
+    table: nat
+    chain: '{{ item }}'
+    flush: yes
+  with_items: [ 'INPUT', 'OUTPUT', 'PREROUTING', 'POSTROUTING' ]
+  become: true
+
 - name: force systemd to reread configs
   systemd:
     daemon_reload: true
