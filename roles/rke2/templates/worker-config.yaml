@@ -1,3 +1,3 @@
-server: https://{{ hostvars[k8s.rke2.config.server]['ansible_default_ipv4']['address'] }}:{{ k8s.rke2.config.port }}
+server: https://{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}:{{ k8s.rke2.config.port }}
 token: {{ k8s.rke2.config.token }}
 node-name: {{ inventory_hostname }}
