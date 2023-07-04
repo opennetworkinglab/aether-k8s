@@ -1,7 +1,7 @@
 ---
 
 - name: provision rke2
-  hosts: all
+  hosts: master_nodes, worker_nodes
   gather_facts: true
     
   vars_files:
