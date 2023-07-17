@@ -15,15 +15,10 @@ ansible:
 	sh $(K8S_ROOT_DIR)/scripts/ansible ssh-agent bash
 
 #### a. Private keys (for ssh and git) ####
-
 list-keys:
 	ssh-add -l
 
-# add-keys:
-# 	ssh-add <your key>
-
 #### b. Debugging ####
-
 k8s-debug:
 	ansible-playbook -i $(HOSTS_INI_FILE) $(K8S_ROOT_DIR)/debug.yml \
 		--extra-vars "ROOT_DIR=$(ROOT_DIR)" --extra-vars $(EXTRA_VARS)
