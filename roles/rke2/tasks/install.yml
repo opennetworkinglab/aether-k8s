@@ -3,20 +3,20 @@
 - set_fact:
     script_dir: /tmp/rke2
 
-- name: flush iptables rules
-  iptables:
-    chain: "{{ item }}"
-    flush: yes
-  with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
-  become: true
+# - name: flush iptables rules
+#   iptables:
+#     chain: "{{ item }}"
+#     flush: yes
+#   with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
+#   become: true
 
-- name: flush iptables nat rules
-  ansible.builtin.iptables:
-    table: nat
-    chain: '{{ item }}'
-    flush: yes
-  with_items: [ 'INPUT', 'OUTPUT', 'PREROUTING', 'POSTROUTING' ]
-  become: true
+# - name: flush iptables nat rules
+#   ansible.builtin.iptables:
+#     table: nat
+#     chain: '{{ item }}'
+#     flush: yes
+#   with_items: [ 'INPUT', 'OUTPUT', 'PREROUTING', 'POSTROUTING' ]
+#   become: true
 
 - name: remove {{ script_dir }}
   file:
