@@ -1,5 +1,36 @@
 ---
 
+# prep Ubuntu to support RKE2-for-Aether
+
+- name: set fs.file-max to 2097152
+  ansible.posix.sysctl:
+    name: fs.file-max
+    value: '2097152'
+    sysctl_set: true
+    reload: true
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: set fs.inotify.max_user_watches to 524288
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: '524288'
+    sysctl_set: true
+    reload: true
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: set fs.inotify.max_user_instances to 512
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: '512'
+    sysctl_set: true
+    reload: true
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+# install RKE2-for-Aether
+
 - set_fact:
     script_dir: /tmp/rke2
 
