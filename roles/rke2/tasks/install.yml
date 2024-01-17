@@ -1,4 +1,18 @@
 ---
+# Check port 80(HTTP) is closed, not used by any other service
+- name: Check port 80 is closed
+  ansible.builtin.wait_for:
+    host:  128.84.155.135
+    port: 80
+    state: stopped
+    delay: 0
+    timeout: 10
+  ignore_errors: true
+  register: port_result
+
+# - name: Display the result
+#   debug:
+#    var: port_result
 
 # prep Ubuntu to support RKE2-for-Aether
 
