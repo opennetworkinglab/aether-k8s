@@ -2,15 +2,15 @@
 # Check port 80(HTTP) is closed, not used by any other service
 - name: Check port 80 is closed
   ansible.builtin.wait_for:
-    host:  128.84.155.135
     port: 80
     state: stopped
     delay: 0
-    timeout: 10
+    timeout: 10 #increase timeout for more hosts in inventory
+  when: inventory_hostname in groups['master_nodes']
   ignore_errors: true
   register: port_result
 
-# - name: Display the result
+# - name: Display the port result
 #   debug:
 #    var: port_result
 
