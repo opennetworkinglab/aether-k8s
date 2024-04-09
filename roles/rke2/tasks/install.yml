@@ -103,16 +103,16 @@
 
 # # TODO: add check for ke2.config.params_file.* existence
 # - name: copy {{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.master }} to (localhost)/tmp/master-params.yaml
-#   template: 
-#     src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.master }}" 
+#   template:
+#     src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.master }}"
 #     dest: /tmp/master-params.yaml
 #   when: inventory_hostname in groups['master_nodes']
 #   delegate_to: localhost
 #   ignore_errors: yes
 
 # - name: append (localhost)/tmp/master-params.yaml to /etc/rancher/rke2/config.yaml
-#   lineinfile: 
-#     path: /etc/rancher/rke2/config.yaml 
+#   lineinfile:
+#     path: /etc/rancher/rke2/config.yaml
 #     line: "{{lookup('file', '/tmp/master-params.yaml')}}"
 #     create: yes
 #     state: present
@@ -127,7 +127,7 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-- name: waiting for the master nodes to get ready 
+- name: waiting for the master nodes to get ready
   shell: |
     /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait nodes --for=condition=Ready --all --timeout=300s
     /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait deployment -n kube-system --for=condition=available --all --timeout=300s
@@ -174,16 +174,16 @@
 
 # # TODO: add check for ke2.config.params_file.* existence
 # - name: copy {{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.worker }} to (localhost)/tmp/worker-params.yaml
-#   template: 
-#     src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.worker }}" 
+#   template:
+#     src: "{{ ROOT_DIR }}/{{ k8s.rke2.config.params_file.worker }}"
 #     dest: /tmp/worker-params.yaml
 #   when: inventory_hostname in groups['worker_nodes']
 #   delegate_to: localhost
 #   ignore_errors: yes
 
 # - name: append (localhost)/tmp/worker-params.yaml to /etc/rancher/rke2/config.yaml
-#   lineinfile: 
-#     path: /etc/rancher/rke2/config.yaml 
+#   lineinfile:
+#     path: /etc/rancher/rke2/config.yaml
 #     line: "{{lookup('file', '/tmp/worker-params.yaml')}}"
 #     create: yes
 #     state: present
