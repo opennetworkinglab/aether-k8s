@@ -4,7 +4,7 @@ k8s:
     config:
       token: purdue-k8s-rke2
       port: 9345
-      params_file: 
+      params_file:
         master: ""
         worker: ""
 
