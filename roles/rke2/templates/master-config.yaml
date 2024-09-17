@@ -5,9 +5,12 @@ cluster-cidr: 10.42.0.0/16
 service-cidr: 10.42.0.0/16
 kubelet-arg:
 - --allowed-unsafe-sysctls=net.*
-# - --feature-gates=CPUManager=true
-# --topology-manager-policy=best-effort
-# - --cpu-manager-policy=static
+####BEGIN-Param's for Exclusive CPU allocation for POD's###
+#- --cpu-manager-policy=static
+#- --kube-reserved=cpu=1
+#- --system-reserved=cpu=1
+#- --feature-gates=CPUManager=true
+####END-Param's for Exclusive CPU allocation for POD's###
 pause-image: k8s.gcr.io/pause:3.3
 kube-proxy-arg:
 - --metrics-bind-address=0.0.0.0:10249
