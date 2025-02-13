@@ -16,12 +16,6 @@
 - set_fact:
     script_dir: /tmp/rke2
 
-# - name: delete /etc/rancher/rke2/config.yaml
-#   file:
-#     path: /etc/rancher/rke2/config.yaml
-#     state: absent
-#   become: true
-
 - name: uninstall rke2 masters/workers
   command: "/usr/local/bin/rke2-uninstall.sh"
   environment:
@@ -33,21 +27,6 @@
   file:
     path: "{{ script_dir }}"
     state: absent
-
-# - name: flush iptables rules
-#   iptables:
-#     chain: "{{ item }}"
-#     flush: yes
-#   with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
-#   become: true
-
-# - name: flush iptables nat rules
-#   ansible.builtin.iptables:
-#     table: nat
-#     chain: '{{ item }}'
-#     flush: yes
-#   with_items: [ 'INPUT', 'OUTPUT', 'PREROUTING', 'POSTROUTING' ]
-#   become: true
 
 - name: force systemd to reread configs
   systemd:

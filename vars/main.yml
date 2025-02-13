@@ -8,8 +8,5 @@ k8s:
         master: ""
         worker: ""
 
-  kubectl:
-    version: v1.23.15
-
   helm:
     version: v3.10.3
