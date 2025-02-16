@@ -58,7 +58,7 @@
 - name: install rke2 on masters
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
+    INSTALL_RKE2_CHANNEL: "{{ k8s.rke2.version }}"
   when: inventory_hostname in groups['master_nodes']
   become: true
 
@@ -111,7 +111,7 @@
 - name: install rke2 agent on workers
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
+    INSTALL_RKE2_CHANNEL: "{{ k8s.rke2.version }}"
     INSTALL_RKE2_TYPE: "agent"
   when: inventory_hostname in groups['worker_nodes']
   become: true
@@ -157,6 +157,12 @@
     remote_src: yes
   when: inventory_hostname in groups['master_nodes']
   become: true
+
+- name: Replace //127.0.0.1 with {{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}
+  replace:
+    path: "{{ ansible_env.HOME }}/.kube/config"
+    regexp: 'https://127\.0\.0\.1:6443'
+    replace: "https://{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}:6443"
 
 - name: change {{ ansible_env.HOME }}/.kube ownership
   shell: |
