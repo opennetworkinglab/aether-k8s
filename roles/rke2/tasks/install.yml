@@ -1,7 +1,6 @@
 ---
 
 # prep Ubuntu to support RKE2-for-Aether
-
 - name: set fs.file-max to 2097152
   ansible.posix.sysctl:
     name: fs.file-max
@@ -30,24 +29,8 @@
   become: true
 
 # install RKE2-for-Aether
-
 - set_fact:
     script_dir: /tmp/rke2
-
-# - name: flush iptables rules
-#   iptables:
-#     chain: "{{ item }}"
-#     flush: yes
-#   with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
-#   become: true
-
-# - name: flush iptables nat rules
-#   ansible.builtin.iptables:
-#     table: nat
-#     chain: '{{ item }}'
-#     flush: yes
-#   with_items: [ 'INPUT', 'OUTPUT', 'PREROUTING', 'POSTROUTING' ]
-#   become: true
 
 - name: remove {{ script_dir }}
   file:
@@ -75,7 +58,7 @@
 - name: install rke2 on masters
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
+    INSTALL_RKE2_CHANNEL: "{{ k8s.rke2.version }}"
   when: inventory_hostname in groups['master_nodes']
   become: true
 
@@ -94,7 +77,6 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-
 - name: start rke2-server on masters
   systemd:
     name: rke2-server
@@ -102,10 +84,18 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-- name: waiting for the master nodes to get ready
+- name: copy kubectl
+  copy:
+    src: /var/lib/rancher/rke2/bin/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: "a+x"
+  when: inventory_hostname in groups['master_nodes']
+  become: true
+
+- name: waiting for the master node(s) to get ready
   shell: |
-    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait nodes --for=condition=Ready --all --timeout=300s
-    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait deployment -n kube-system --for=condition=available --all --timeout=300s
+    kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait nodes --for=condition=Ready --all --timeout=300s
+    kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml wait deployment -n kube-system --for=condition=available --all --timeout=300s
   when: inventory_hostname in groups['master_nodes']
   become: true
 
@@ -121,7 +111,7 @@
 - name: install rke2 agent on workers
   shell: "{{ script_dir }}/install.sh"
   environment:
-    INSTALL_RKE2_VERSION: "{{ k8s.rke2.version }}"
+    INSTALL_RKE2_CHANNEL: "{{ k8s.rke2.version }}"
     INSTALL_RKE2_TYPE: "agent"
   when: inventory_hostname in groups['worker_nodes']
   become: true
@@ -140,7 +130,6 @@
   when: inventory_hostname in groups['worker_nodes']
   become: true
 
-
 - name: start rke2-agent on workers (sequentially)
   systemd:
     name: rke2-agent
@@ -153,15 +142,6 @@
   systemd:
     daemon_reload: true
   when: inventory_hostname in groups['worker_nodes']
-  become: true
-
-- name: download kubectl
-  get_url:
-    url: https://dl.k8s.io/release/{{ k8s.kubectl.version }}/bin/linux/amd64/kubectl
-    validate_certs: false
-    dest: "/usr/local/bin/kubectl"
-    mode: "a+x"
-  when: inventory_hostname in groups['master_nodes']
   become: true
 
 - name: create {{ ansible_env.HOME }}/.kube
@@ -177,6 +157,12 @@
     remote_src: yes
   when: inventory_hostname in groups['master_nodes']
   become: true
+
+- name: Replace //127.0.0.1 with {{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}
+  replace:
+    path: "{{ ansible_env.HOME }}/.kube/config"
+    regexp: 'https://127\.0\.0\.1:6443'
+    replace: "https://{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}:6443"
 
 - name: change {{ ansible_env.HOME }}/.kube ownership
   shell: |

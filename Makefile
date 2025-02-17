@@ -3,16 +3,7 @@
 export ROOT_DIR ?= $(PWD)
 export K8S_ROOT_DIR ?= $(ROOT_DIR)
 
-export ANSIBLE_NAME ?= ansible-k8s
-export HOSTS_INI_FILE ?= $(K8S_ROOT_DIR)/hosts.ini
-
 export EXTRA_VARS ?= ""
-
-#### Start Ansible docker ####
-
-k8s-ansible:
-	export ANSIBLE_NAME=$(ANSIBLE_NAME); \
-	sh $(K8S_ROOT_DIR)/scripts/ansible ssh-agent bash
 
 #### a. Debugging ####
 k8s-debug:
