@@ -89,6 +89,7 @@
     src: /var/lib/rancher/rke2/bin/kubectl
     dest: /usr/local/bin/kubectl
     mode: "a+x"
+    remote_src: true
   when: inventory_hostname in groups['master_nodes']
   become: true
 
