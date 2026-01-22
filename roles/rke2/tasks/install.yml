@@ -164,6 +164,7 @@
     path: "{{ ansible_env.HOME }}/.kube/config"
     regexp: 'https://127\.0\.0\.1:6443'
     replace: "https://{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}:6443"
+  when: inventory_hostname in groups['master_nodes']
 
 - name: change {{ ansible_env.HOME }}/.kube ownership
   shell: |
