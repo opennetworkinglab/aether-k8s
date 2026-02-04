@@ -12,4 +12,6 @@ kube-proxy-arg:
 kube-apiserver-arg:
 - --service-node-port-range=2000-36767
 node-label:
-- "node-role.aetherproject.org=omec-upf"
+- "node-role.aetherproject.org=omec-upf" # To be removed in the near future
+- "node-role.aetherproject.org/5gc=true"
+- "node-role.aetherproject.org/upf=true"
