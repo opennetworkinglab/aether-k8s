@@ -159,12 +159,15 @@
   when: inventory_hostname in groups['master_nodes']
   become: true
 
-- name: Replace //127.0.0.1 with {{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}
+- name: Replace 127.0.0.1 if needed
   replace:
     path: "{{ ansible_env.HOME }}/.kube/config"
     regexp: 'https://127\.0\.0\.1:6443'
-    replace: "https://{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] }}:6443"
-  when: inventory_hostname in groups['master_nodes']
+    replace: "https://{{ hostvars[groups['master_nodes'][0]]['ansible_host'] }}:6443"
+  when:
+    - inventory_hostname in groups['master_nodes']
+    - hostvars[groups['master_nodes'][0]]['ansible_host'] is defined
+    - hostvars[groups['master_nodes'][0]]['ansible_host'] != '127.0.0.1'
 
 - name: change {{ ansible_env.HOME }}/.kube ownership
   shell: |
