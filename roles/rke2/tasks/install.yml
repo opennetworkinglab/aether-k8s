@@ -97,7 +97,7 @@
   shell: kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get --raw=/readyz
   register: rke2_api_ready
   retries: 60
-  delay: 5
+  delay: 10
   until: rke2_api_ready.rc == 0
   changed_when: false
   when: inventory_hostname in groups['master_nodes']
@@ -107,7 +107,7 @@
   shell: kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get node "{{ inventory_hostname }}" -o name
   register: rke2_current_node
   retries: 60
-  delay: 5
+  delay: 10
   until: rke2_current_node.rc == 0 and (rke2_current_node.stdout | trim) != ''
   changed_when: false
   when: inventory_hostname in groups['master_nodes']
