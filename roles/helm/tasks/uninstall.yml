@@ -1,3 +1,5 @@
+---
+
 - set_fact:
     script_dir: /tmp/helm
 

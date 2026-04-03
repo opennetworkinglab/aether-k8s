@@ -5,13 +5,10 @@ cluster-cidr: 10.42.0.0/16
 service-cidr: 10.43.0.0/16
 kubelet-arg:
 - --allowed-unsafe-sysctls=net.*
-pause-image: registry.k8s.io/pause:3.3  # To be  updated to tag 3.10
 kube-proxy-arg:
 - --metrics-bind-address=0.0.0.0:10249
-- --proxy-mode=ipvs
 kube-apiserver-arg:
 - --service-node-port-range=2000-36767
 node-label:
-- "node-role.aetherproject.org=omec-upf" # To be removed in the near future
 - "node-role.aetherproject.org/5gc=true"
 - "node-role.aetherproject.org/upf=true"
