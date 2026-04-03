@@ -3,7 +3,7 @@
 The K8 repository builds a multi-node K8 cluster using rke2 and installs Helm.
 To set up the K8 repository, you need to provide the following:
 
-1. Node configurations with IP addresses in the host.ini file.
+1. Node configurations with IP addresses in the hosts.ini file.
    - You can specify both master and worker nodes.
 
 2. rke2 configuration parameters, such as the rke2 version, in the vars/main.yml file.
