@@ -2,7 +2,7 @@ k8s:
   rke2:
     version: v1.31.3+rke2r1
     config:
-      token: purdue-k8s-rke2
+      token: aether-k8s-rke2
       port: 9345
       params_file:
         master: ""
